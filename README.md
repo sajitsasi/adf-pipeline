@@ -11,8 +11,30 @@ The Private Link Service (PLS) as shown in the Provider Network performs [Destin
 # Connectivity from Managed/Secure VNET to a server in another VNET or On-Premises server
 If you want to connect from a private/managed subnet to an on-premise server or a server in another VNET as shown in the figure below which shows connectivity from Azure Data Factory (ADF) Managed Virtual Network to an on-premise SQL Server
 ![Figure 1](images/Azure_ADF_FWD.png)
-1. Implementing the Forwarding Solution:
-```
+
+# Implementing the Forwarding Solution:
+1. The following values will be used for this solution:
+   - Resource Group: ```az-adf-fwd-rg```
+   - Azure Region: ```East US```
+   - Forwarding VNET Name: ```az-adf-fwd-vnet```
+   - Forwarding VNET Address Space: ```10.100.0.0/20```
+   - Subnets in Forwarding VNET:
+     - Name: ```adf-test-fe-subnet```  Address Space: ```10.100.0.0/24```
+     - Name: ```adf-test-be-subnet```  Address Space: ```10.100.1.0/24```
+     - Name: ```adf-test-pls-subnet```  Address Space: ```10.100.2.0/24```
+     - Name: ```adf-test-vm-subnet```  Address Space: ```10.100.3.0/24```
+     - Name: ```adf-test-bast-subnet```  Address Space: ```10.100.4.0/24``` (_optional_)
+   - NSG for blocking external traffic (_optional_): ```adf-fwd-vm-nsg```
+   - Standard Internal Load Balancer: ```ADFFwdILB```
+   - Forwarding VM name: ```fwdvm[#]```
+   - Forwarding VM NIC: ```fwdvm[#]nic[RANDOM #]```
+
+2. Connect to your subscription
+   - Run the following command
+     ```az login```
+
+
+3. List 
 # ALLOWED_IP_ADDRESS is the allowed IP Address from which you'll connect
 # to the Bastion VM via SSH. Be sure to add the /32 CIDR at the end
 export ALLOWED_IP_ADDRESSES="aaa.bbb.ccc.ddd"
@@ -165,8 +187,8 @@ echo "PLS ID is ${PLS_ID}"
 
 # Print Bastion VM Public IP
 echo "Bastion Public IP is: $(az vm show -d -g az-fwd-rg -n bastionvm --query publicIps -o tsv)"
-```
-2. Creating Forwarding Rule to Endpoint
+
+4. Creating Forwarding Rule to Endpoint
    * Copy [ip_fwd.sh](ip_fwd.sh) to the Bastion VM and then to each of the  NAT VMs
    * Run the script on each VM with the following options:  
      ```sudo ./ip_fwd.sh -i eth0 -f 1433 -a <FQDN/IP> -b 1433```  

@@ -19,19 +19,38 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    - Forwarding VNET Name: ```az-adf-fwd-vnet```
    - Forwarding VNET Address Space: ```10.100.0.0/20```
    - Subnets in Forwarding VNET:
-     - Name: ```adf-test-fe-subnet```  Address Space: ```10.100.0.0/24```
-     - Name: ```adf-test-be-subnet```  Address Space: ```10.100.1.0/24```
-     - Name: ```adf-test-pls-subnet```  Address Space: ```10.100.2.0/24```
-     - Name: ```adf-test-vm-subnet```  Address Space: ```10.100.3.0/24```
-     - Name: ```adf-test-bast-subnet```  Address Space: ```10.100.4.0/24``` (_optional_)
+     - Name: ```adf-fwd-fe-subnet```  Address Space: ```10.100.0.0/24```
+     - Name: ```adf-fwd-be-subnet```  Address Space: ```10.100.1.0/24```
+     - Name: ```adf-fwd-pls-subnet```  Address Space: ```10.100.2.0/24```
+     - Name: ```adf-fwd-vm-subnet```  Address Space: ```10.100.3.0/24```
+     - Name: ```adf-fwd-bast-subnet```  Address Space: ```10.100.4.0/24``` (_optional_)
    - NSG for blocking external traffic (_optional_): ```adf-fwd-vm-nsg```
    - Standard Internal Load Balancer: ```ADFFwdILB```
    - Forwarding VM name: ```fwdvm[#]```
    - Forwarding VM NIC: ```fwdvm[#]nic[RANDOM #]```
 
 2. Connect to your subscription
-   - Run the following command
-     ```az login```
+   - Run the following command  
+     ```az login```  
+   - List subscriptions available if you have more than one Azure subscription:  
+     ```az account list --all``  
+   - Specify the subscription you want to use:  
+     ```az account set --subscription <subscription_id>```  
+
+3. Create a Resource Group  
+   ```az group create --name az-adf-fwd-rg --location eastus```  
+
+4. Create a VNET and first subnet  
+   ```
+   az network vnet create \
+     -g az-adf-fwd-rg \
+     -n az-adf-fwd-vnet \
+     --address-prefixes 10.100.0.0/20 \
+     --subnet-name adf-fwd-fe-subnet \
+     -- subnet-prefixes 10.100.0.0/24 \
+     --location eastus
+   ```
+   
 
 
 3. List 

@@ -25,6 +25,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      - Name: ```adf-fwd-vm-subnet```  Address Space: ```10.100.3.0/24```
      - Name: ```adf-fwd-bast-subnet```  Address Space: ```10.100.4.0/24``` (_optional_)
    - NSG for blocking external traffic (_optional_): ```adf-fwd-vm-nsg```
+   - Bastion VM for external access (_optional_): ```bastionvm```
    - Standard Internal Load Balancer: ```ADFFwdILB```
    - Forwarding VM name: ```fwdvm[#]```
    - Forwarding VM NIC: ```fwdvm[#]nic[RANDOM #]```
@@ -48,17 +49,93 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    az group create --name az-adf-fwd-rg --location eastus
    ```  
 
-4. Create a VNET and first subnet  
+4. Create a VNET and subnets  
+
+   - Create VNET and Frontend subnet
    ```
    az network vnet create \
      -g az-adf-fwd-rg \
      -n az-adf-fwd-vnet \
      --address-prefixes 10.100.0.0/20 \
      --subnet-name adf-fwd-fe-subnet \
-     -- subnet-prefixes 10.100.0.0/24 \
+     --subnet-prefixes 10.100.0.0/24 \
      --location eastus
-   ```
+   ```  
+
+   - Create Backend subnet
+   ``` 
+   az network vnet subnet create \
+     -g az-adf-fwd-rg \
+     --vnet-name az-adf-fwd-vnet \
+     -n adf-fwd-be-subnet \
+     --address-prefix 10.100.1.0/24 
+   ```  
+   - Create PLS subnet
+   ``` 
+   az network vnet subnet create \
+     -g az-adf-fwd-rg \
+     --vnet-name az-adf-fwd-vnet \
+     -n adf-fwd-pls-subnet \
+     --address-prefix 10.100.2.0/24 
+   ```  
+     
+   - Create VM subnet
+   ``` 
+   az network vnet subnet create \
+     -g az-adf-fwd-rg \
+     --vnet-name az-adf-fwd-vnet \
+     -n adf-fwd-vm-subnet \
+     --address-prefix 10.100.3.0/24 
+   ```  
    
+   - Create Bastion subnet (_Optional - use if you only want to externally connect_)
+   ``` 
+   az network vnet subnet create \
+     -g az-adf-fwd-rg \
+     --vnet-name az-adf-fwd-vnet \
+     -n adf-fwd-bast-subnet \
+     --address-prefix 10.100.4.0/24 
+   ```  
+
+5. Create an NSG (_Optional - use if you only want to externally connect_)  
+   - Create NSG
+   ```
+   az network nsg create -g az--adf-fwd-rg --name adf-fwd-vm-nsg
+   ```
+   - Create NSG Rule for SSH Access
+   ```
+   ALLOWED_IP_ADDRESS="$(curl ifconfig.me)/32"
+   az network nsg rule create \
+     -g az-adf-fwd-rg \
+     --nsg-name adf-fwd-vm-nsg \
+     --name AllowSSH \
+     --direction inbound \
+     --source-address-prefix ${ALLOWED_IP_ADDRESS} \
+     --destination-port-range 22 \
+     --access allow \
+     --priority 500 \
+     --protocol Tcp
+   ```
+
+   - Assign NSG to Bastion subnet
+   ```
+   az network vnet subnet update \
+     -g az-fwd-rg \
+     -n adf-fwd-bast-subnet \
+     --vnet-name az-adf-fwd-vnet \
+     --network-security-group adf-fwd-vm-nsg
+   ```
+
+   - Create Bastion VM
+   ```
+   az vm create \
+     -g az-adf-fwd-rg \
+     --image UbuntuLTS \
+     --admin-user azureuser \
+     --generate-ssh-keys \
+     --vnet-name az-adf-fwd-vnet \
+     --subnet adf-fwd-bast-subnet
+   ```
 
 
 3. List 

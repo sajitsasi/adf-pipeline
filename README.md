@@ -231,6 +231,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --admin-user azureuser \
      --generate-ssh-keys \
      --nics ${NIC1_NAME} \
+     --public-ip-address "" \
      --custom-data ./cloud_init.yaml
    ```  
 

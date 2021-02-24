@@ -114,6 +114,6 @@ DNAT_DEL_CMD=$(echo ${DNAT_CMD} | sed -e 's/\-A/\-D/g')
 SNAT_DEL_CMD=$(echo ${SNAT_CMD} | sed -e 's/\-A/\-D/g')
 EPOCH=$(date +%s)
 echo ${DNAT_DEL_CMD} > ${HOME}/.ip_forward/".${EPOCH}_${FE_PORT}"
-echo ${DNAT_DEL_CMD} >> ${HOME}/.ip_forward/".${EPOCH}_${FE_PORT}"
+echo ${SNAT_DEL_CMD} >> ${HOME}/.ip_forward/".${EPOCH}_${FE_PORT}"
 echo "${EPOCH} ${FE_PORT}" >> ${HOME}/.ip_forward/.history
 echo -e "\e[32mDone!\e[0m"

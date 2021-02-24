@@ -7,3 +7,4 @@ runcmd:
   - curl -o /usr/local/bin/ip_fwd.sh https://raw.githubusercontent.com/sajitsasi/adf-pipeline/main/ip_fwd.sh
   - chmod +x /usr/local/bin/ip_fwd.sh
   - echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+  - sysctl -p

@@ -30,43 +30,42 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 
 ## Implement Forwarding Solution
 1. The following values will be used for this solution:
-   - Resource Group: ```az-adf-fwd-rg```
-   - Azure Region: ```East US```
-   - Forwarding VNET Name: ```az-adf-fwd-vnet```
-   - Forwarding VNET Address Space: ```10.100.0.0/20```
-   - Subnets in Forwarding VNET:
-     - Name: ```adf-fwd-fe-subnet```  Address Space: ```10.100.0.0/24```
-     - Name: ```adf-fwd-be-subnet```  Address Space: ```10.100.1.0/24```
-     - Name: ```adf-fwd-pls-subnet```  Address Space: ```10.100.2.0/24```
-     - Name: ```adf-fwd-vm-subnet```  Address Space: ```10.100.3.0/24```
-     - Name: ```adf-fwd-bast-subnet```  Address Space: ```10.100.4.0/24``` (_optional_)
-   - NSG for blocking external traffic (_optional_): ```adf-fwd-vm-nsg```
-   - Bastion VM for external access (_optional_): ```bastionvm```
-   - Standard Internal Load Balancer: ```ADFFwdILB```
-   - Forwarding VM name: ```fwdvm[#]```
-   - Forwarding VM NIC: ```fwdvm[#]nic[RANDOM #]```
-   - Backend/Destination server IPs and services:
+   * Resource Group: ```az-adf-fwd-rg```
+   * Azure Region: ```East US```
+   * Forwarding VNET Name: ```az-adf-fwd-vnet```
+   * Forwarding VNET Address Space: ```10.100.0.0/20```
+   * Subnets in Forwarding VNET:
+     * Name: ```adf-fwd-fe-subnet```  Address Space: ```10.100.0.0/24```
+     * Name: ```adf-fwd-be-subnet```  Address Space: ```10.100.1.0/24```
+     * Name: ```adf-fwd-pls-subnet```  Address Space: ```10.100.2.0/24```
+     * Name: ```adf-fwd-vm-subnet```  Address Space: ```10.100.3.0/24```
+     * Name: ```adf-fwd-bast-subnet```  Address Space: ```10.100.4.0/24``` (_optional_)
+   * NSG for blocking external traffic (_optional_): ```adf-fwd-vm-nsg```
+   * Bastion VM for external access (_optional_): ```bastionvm```
+   * Standard Internal Load Balancer: ```ADFFwdILB```
+   * Forwarding VM name: ```fwdvm[#]```
+   * Forwarding VM NIC: ```fwdvm[#]nic[RANDOM #]```
+   * Backend/Destination server IPs and services:
      The following table shows the configuration that will be passed to the
      port forwarding VM. The `FE Port` references the port on which the
      port forwarding VM listens while the `BE Port` references the port
      on which the destination server listens.
-     Note: Frontend = FE, Backend = BE
      | Server     | Service    | FE Port | BE Port  |
      |------------|------------|---------|----------|
      | 10.100.3.4 | SQL        | 1433    |   1433   |
      | 10.100.3.4 | File Share | 445     |   445    |
-     | 10.100.3.5 | SQL        | 1434    |   1434   |
+     | 10.100.3.5 | SQL        | 1434    |   1433   |
 
 2. Connect to your subscription
-   - Run the following command  
+   * Run the following command  
      ```
      az login
      ```  
-   - List subscriptions available if you have more than one Azure subscription:  
+   * List subscriptions available if you have more than one Azure subscription:  
      ```
      az account list --all
      ```
-   - Specify the subscription you want to use:  
+   * Specify the subscription you want to use:  
      ```
      az account set --subscription <subscription_id>
      ```  
@@ -78,7 +77,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 
 4. Create a VNET and subnets  
 
-   - Create VNET and Frontend subnet
+   * Create VNET and Frontend subnet
    ```
    az network vnet create \
      -g az-adf-fwd-rg \
@@ -89,7 +88,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --location eastus
    ```  
 
-   - Create Backend subnet
+   * Create Backend subnet
    ``` 
    az network vnet subnet create \
      -g az-adf-fwd-rg \
@@ -97,7 +96,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      -n adf-fwd-be-subnet \
      --address-prefix 10.100.1.0/24 
    ```  
-   - Create PLS subnet
+   * Create PLS subnet
    ``` 
    az network vnet subnet create \
      -g az-adf-fwd-rg \
@@ -106,7 +105,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --address-prefix 10.100.2.0/24 
    ```  
      
-   - Disable PLS Network Policies
+   * Disable PLS Network Policies
    ```  
    az network vnet subnet update \
      -g az-adf-fwd-rg \
@@ -115,7 +114,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --disable-private-link-service-network-policies true
    ```  
 
-   - Create VM subnet
+   * Create VM subnet
    ``` 
    az network vnet subnet create \
      -g az-adf-fwd-rg \
@@ -124,7 +123,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --address-prefix 10.100.3.0/24 
    ```  
    
-   - Create Bastion subnet (_Optional - use if you only want to externally connect_)
+   * Create Bastion subnet (_Optional * use if you only want to externally connect_)
    ``` 
    az network vnet subnet create \
      -g az-adf-fwd-rg \
@@ -133,12 +132,12 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --address-prefix 10.100.4.0/24 
    ```  
 
-5. Create an NSG (_Optional - use if you only want to externally connect_)  
-   - Create NSG
+5. Create an NSG (_Optional * use if you only want to externally connect_)  
+   * Create NSG
    ```
    az network nsg create -g az--adf-fwd-rg --name adf-fwd-vm-nsg
    ```
-   - Create NSG Rule for SSH Access
+   * Create NSG Rule for SSH Access
    ```  
    ALLOWED_IP_ADDRESS="$(curl ifconfig.me)/32"
    az network nsg rule create \
@@ -153,7 +152,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --protocol Tcp
    ```  
 
-   - Assign NSG to Bastion subnet
+   * Assign NSG to Bastion subnet
    ```  
    az network vnet subnet update \
      -g az-adf-fwd-rg \
@@ -162,7 +161,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --network-security-group adf-fwd-vm-nsg
    ```  
 
-   - Create Bastion VM
+   * Create Bastion VM
    ```  
    az vm create \
      -g az-adf-fwd-rg \
@@ -175,7 +174,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 
 
 6. Standard Internal Load Balancer
-   - Create Load Balancer
+   * Create Load Balancer
    ```  
    az network lb create \
      -g az-adf-fwd-rg \
@@ -187,7 +186,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --backend-pool-name bepool
    ```  
 
-   - Create a health probe to monitor the health of VMs using port 22  
+   * Create a health probe to monitor the health of VMs using port 22  
    ```  
    az network lb probe create \
      -g az-adf-fwd-rg \
@@ -197,7 +196,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --port 22
    ```
 
-   - Create an LB rule to forward SQL packets on 1433 to forwarding VM on 1433
+   * Create an LB rule to forward SQL packets on 1433 to forwarding VM on 1433
    ```  
    az network lb rule create \
      -g az-adf-fwd-rg \
@@ -211,7 +210,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --probe-name SSHProbe
    ```  
 
-   - Create an LB rule to forward (SQL) packets on 1434 to forwarding VM on 1434
+   * Create an LB rule to forward (SQL) packets on 1434 to forwarding VM on 1434
    ```  
    az network lb rule create \
      -g az-adf-fwd-rg \
@@ -225,7 +224,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --probe-name SSHProbe
    ```  
 
-   - Create an LB rule to forward File Share packets on 445 to forwarding VM on 445
+   * Create an LB rule to forward File Share packets on 445 to forwarding VM on 445
    ```  
    az network lb rule create \
      -g az-adf-fwd-rg \
@@ -239,7 +238,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --probe-name SSHProbe
    ```  
 
-   - Get ILB Resource ID
+   * Get ILB Resource ID
    ```  
    FWD_ILB=$(az network lb show -g az-adf-fwd-rg -n ADFFWDILB --query frontendIpConfigurations[0].id -o tsv)
    ```  
@@ -293,17 +292,17 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    ```  
 
 11. Print output variables
-    - Print PLS Resource ID to use for connection to this PLS
+    * Print PLS Resource ID to use for connection to this PLS
     ```  
     echo "PLS Resource ID is ${PLS_ID}"
     ```  
 
-    - Print Bastion VM Public IP (_Optional_)
+    * Print Bastion VM Public IP (_Optional_)
     ```  
     echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
     ```  
 
-    - Print Bastion VM Public IP (_Optional_)
+    * Print Bastion VM Public IP (_Optional_)
     ```  
     echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
     ```  
@@ -313,20 +312,22 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     Run command on remote FWD VM to create forwarding rule to destination IP
     and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
 
-    - Following is a command to forward SQL Ports
+    * Following is a command to forward SQL Ports
     ```  
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1433 -a 10.100.3.4 -b 1433"
     ```  
 
-    - Following is a command to forward Windows File Share port
+    * Following is a command to forward Windows File Share port
     ```  
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 445 -a 10.100.3.4 -b 445"
     ```  
 
-    - When you have multiple SQL servers, you want to use a different frontend
+    * When you have multiple SQL servers, you want to use a different frontend
       port to forward to the new server.  Here's an example of another SQL 
       server with ```DEST_IP=10.100.3.5``` but listening on 1433. This example 
       uses a frontent port of 1434:
     ```  
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1434 -a 10.100.3.5 -b 1433"
     ```  
+
+13. Setup connectivity in ADF

@@ -196,7 +196,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --port 22
    ```
 
-   - Create an LB rule to forward SQL packets on 1433 to backend NAT VM on 1433
+   - Create an LB rule to forward SQL packets on 1433 to forwarding VM on 1433
    ```  
    az network lb rule create \
      -g az-adf-fwd-rg \
@@ -205,6 +205,34 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --protocol tcp \
      --frontend-port 1433 \
      --backend-port 1433 \
+     --frontend-ip-name FrontEnd \
+     --backend-pool-name bepool \
+     --probe-name SSHProbe
+   ```  
+
+   - Create an LB rule to forward (SQL) packets on 1434 to forwarding VM on 1434
+   ```  
+   az network lb rule create \
+     -g az-adf-fwd-rg \
+     --lb-name ADFFWDILB \
+     --name OnPremSQL \
+     --protocol tcp \
+     --frontend-port 1434 \
+     --backend-port 1434 \
+     --frontend-ip-name FrontEnd \
+     --backend-pool-name bepool \
+     --probe-name SSHProbe
+   ```  
+
+   - Create an LB rule to forward File Share packets on 445 to forwarding VM on 445
+   ```  
+   az network lb rule create \
+     -g az-adf-fwd-rg \
+     --lb-name ADFFWDILB \
+     --name OnPremSQL \
+     --protocol tcp \
+     --frontend-port 445 \
+     --backend-port 445 \
      --frontend-ip-name FrontEnd \
      --backend-pool-name bepool \
      --probe-name SSHProbe

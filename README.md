@@ -24,7 +24,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      forwarded to.  For example, you have an SQL server installed with 
      IP 10.100.0.4, then the values would be:
      ```  
-     DEST_IP="10.100.0.4"
+     DEST_IP="10.100.3.4"
      DEST_PORT="1433"
      ```  
 
@@ -45,6 +45,16 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    - Standard Internal Load Balancer: ```ADFFwdILB```
    - Forwarding VM name: ```fwdvm[#]```
    - Forwarding VM NIC: ```fwdvm[#]nic[RANDOM #]```
+   - Backend/Destination server IPs and services:
+     The following table shows the configuration that will be passed to the
+     port forwarding VM. The `Frontend Port` references the port on which the
+     port forwarding VM listens while the `Backend Port` references the port
+     on which the destination server listens.
+     | Server     | Service    | Frontend Port | Backend Port |
+     |------------|------------|---------------|--------------|
+     | 10.100.3.4 | SQL        |    1433       |   1433       |
+     | 10.100.3.4 | File Share |    445        |   445        |
+     | 10.100.3.5 | SQL        |    1434       |   1433       |
 
 2. Connect to your subscription
    - Run the following command  
@@ -276,15 +286,18 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 
     - Following is a command to forward SQL Ports
     ```  
-    az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1433 -a 10.100.0.4 -b 1433"
+    az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1433 -a 10.100.3.4 -b 1433"
     ```  
 
     - Following is a command to forward Windows File Share port
     ```  
-    az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 445 -a 10.100.0.4 -b 445"
+    az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 445 -a 10.100.3.4 -b 445"
     ```  
 
-# Connectivity from Managed/Secure VNET to a SQL MI Instance
-
-In connecting from the ADF Managed VNET to a SQL Managed Instance, the configuration is slightly different based on the architecture as shown in the diagram below.
-![Figure 2](images/Azure_ADF_FWD.png)
+    - When you have multiple SQL servers, you want to use a different frontend
+      port to forward to the new server.  Here's an example of another SQL 
+      server with ```DEST_IP=10.100.3.5``` but listening on 1433. This example 
+      uses a frontent port of 1434:
+    ```  
+    az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1434 -a 10.100.3.5 -b 1433"
+    ```  

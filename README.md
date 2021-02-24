@@ -325,9 +325,13 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     * When you have multiple SQL servers, you want to use a different frontend
       port to forward to the new server.  Here's an example of another SQL 
       server with ```DEST_IP=10.100.3.5``` but listening on 1433. This example 
-      uses a frontent port of 1434:
+      uses a frontend port of 1434:
     ```  
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1434 -a 10.100.3.5 -b 1433"
     ```  
 
-13. Setup connectivity in ADF
+13. ### Setup connectivity in ADF
+    1. Go to the [Azure Portal](https://portal.azure.com)
+    2. From the center search, search for "Data Factories" and click on the 
+       "Data Factories" option
+    3. 

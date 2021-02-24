@@ -79,6 +79,15 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --address-prefix 10.100.2.0/24 
    ```  
      
+   - Disable PLS Network Policies
+   ```  
+   az network vnet subnet update \
+     -g az-adf-fwd-rg \
+     -n pls-subnet \
+     --vnet-name az-adf-fwd-vnet \
+     --disable-private-link-service-network-policies true
+   ```  
+
    - Create VM subnet
    ``` 
    az network vnet subnet create \
@@ -103,7 +112,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    az network nsg create -g az--adf-fwd-rg --name adf-fwd-vm-nsg
    ```
    - Create NSG Rule for SSH Access
-   ```
+   ```  
    ALLOWED_IP_ADDRESS="$(curl ifconfig.me)/32"
    az network nsg rule create \
      -g az-adf-fwd-rg \
@@ -115,19 +124,19 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --access allow \
      --priority 500 \
      --protocol Tcp
-   ```
+   ```  
 
    - Assign NSG to Bastion subnet
-   ```
+   ```  
    az network vnet subnet update \
-     -g az-fwd-rg \
+     -g az-adf-fwd-rg \
      -n adf-fwd-bast-subnet \
      --vnet-name az-adf-fwd-vnet \
      --network-security-group adf-fwd-vm-nsg
-   ```
+   ```  
 
    - Create Bastion VM
-   ```
+   ```  
    az vm create \
      -g az-adf-fwd-rg \
      --image UbuntuLTS \
@@ -135,162 +144,99 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --generate-ssh-keys \
      --vnet-name az-adf-fwd-vnet \
      --subnet adf-fwd-bast-subnet
+   ```  
+
+
+6. Standard Internal Load Balancer
+   - Create Load Balancer
+   ```  
+   az network lb create \
+     -g az-adf-fwd-rg \
+     --name ADFFWDILB \
+     --sku standard \
+     --vnet-name az-adf-fwd-vnet \
+     --subnet adf-fwd-fe-subnet \
+     --frontend-ip-name FrontEnd \
+     --backend-pool-name bepool
+   ```  
+
+   - Create a health probe to monitor the health of VMs using port 22  
+   ```  
+   az network lb probe create \
+     -g az-adf-fwd-rg \
+     --lb-name ADFFWDILB \
+     --name SSHProbe \
+     --protocol tcp \
+     --port 22
    ```
 
+   - Create an LB rule to forward SQL packets on 1433 to backend NAT VM on 1433
+   ```  
+   az network lb rule create \
+     -g az-adf-fwd-rg \
+     --lb-name ADFFWDILB \
+     --name OnPremSQL \
+     --protocol tcp \
+     --frontend-port 1433 \
+     --backend-port 1433 \
+     --frontend-ip-name FrontEnd \
+     --backend-pool-name bepool \
+     --probe-name SSHProbe
+   ```  
 
-3. List 
-# ALLOWED_IP_ADDRESS is the allowed IP Address from which you'll connect
-# to the Bastion VM via SSH. Be sure to add the /32 CIDR at the end
-export ALLOWED_IP_ADDRESSES="aaa.bbb.ccc.ddd"
+   - Get ILB Resource ID
+   ```  
+   FWD_ILB=$(az network lb show -g az-adf-fwd-rg -n ADFFWDILB --query frontendIpConfigurations[0].id -o tsv)
+   ```  
+7. Create Private Link Service to ILB
+   ```  
+   PLS_ID=$(
+      az network private-link-service create \
+        -g az-adf-fwd-rg \
+        -n pls2fwdilb \
+        --vnet-name az-adf-fwd-vnet \
+        --subnet adf-fwd-pls-subnet \
+        --lb-frontend-ip-configs ${FWD_ILB} \
+        -l eastus \
+        --query id \
+        -o tsv)
+   ```  
 
-# Login to Azure
-az login 
+8. Create NICs for VMs
+   ```  
+   NIC1_NAME=fwdvm1nic${RANDOM}
+      az network nic create \
+        -g az-adf-fwd-rg \
+        -n ${NIC_NAME} \
+        --vnet-name az-adf-fwd-vnet \
+        --subnet adf-fwd-be-subnet
+   ```  
 
-# Create resource group for forwarding
-az group create -n az-fwd-rg -l eastus
+9. Create backend forwarding Linux VM
+   ```  
+   az vm create \
+     -g az-adf-fwd-rg \
+     --name natvm1 \
+     --image UbuntuLTS \
+     --admin-user azureuser \
+     --generate-ssh-keys \
+     --nics ${NIC1_NAME}
+   ```  
 
-# Create Forwarding VNET and backend subnet to host VMs
-az network vnet create \
-   -g az-fwd-rg \
-   -n az-fwd-vnet \
-   --address-prefixes 10.100.0.0/22 \
-   --subnet-name be-subnet \
-   --subnet-prefixes 10.100.0.0/24 \
-   -l eastus
-
-# Create Frontend subnet for Standard Internal Load Balancer 
-az network vnet subnet create \
-   -g az-fwd-rg \
-   -n fe-subnet \
-   --vnet-name az-fwd-vnet \
-   --address-prefix 10.100.1.0/24 
-
-# Create PLS subnet for Private Link Service
-az network vnet subnet create \
-   -g az-fwd-rg \
-   -n pls-subnet \
-   --vnet-name az-fwd-vnet \
-   --address-prefix 10.100.2.0/24 
-
-az network vnet subnet update \
-   -g az-fwd-rg \
-   -n pls-subnet \
-   --vnet-name az-fwd-vnet \
-   --disable-private-link-service-network-policies true
-
-# Create Bastion subnet for locked down Internet access
-az network vnet subnet create \
-   -g az-fwd-rg \
-   -n bast-subnet \
-   --vnet-name az-fwd-vnet \
-   --address-prefix 10.100.3.0/24 
-
-# Create Network Security Group for locked down access to bast-subnet
-az network nsg create -g az-fwd-rg --name bastion-nsg
-
-# Create NSG rule to allow Internet access from your IP.
-# NOTE: ENTER FILL YOUR IP a.b.c.d/32 in the --source-address-prefix option
-az network nsg rule create \
-   -g az-fwd-rg \
-   --nsg-name bastion-nsg \
-   --name AllowSSH \
-   --direction inbound \
-   --source-address-prefix ${ALLOWED_IP_ADDRESSES} \
-   --destination-port-range 22 \
-   --access allow \
-   --priority 500 \
-   --protocol Tcp
-
-# Assign NSG to Bastion subnet
-az network vnet subnet update \
-   -g az-fwd-rg \
-   -n bast-subnet \
-   --vnet-name az-fwd-vnet \
-   --network-security-group bastion-nsg
-# Create Bastion VM
-az vm create \
-   -g az-fwd-rg \
-   --name bastionvm \
-   --image UbuntuLTS \
-   --admin-user azureuser \
-   --generate-ssh-keys \
-   --vnet-name az-fwd-vnet \
-   --subnet bast-subnet
-
-# Create Standard Internal Load Balancer
-az network lb create \
-   -g az-fwd-rg \
-   --name FWDILB \
-   --sku standard \
-   --vnet-name az-fwd-vnet \
-   --subnet fe-subnet \
-   --frontend-ip-name FrontEnd \
-   --backend-pool-name bepool
-
-# Create a health probe to monitor the health of VMs using port 22
-az network lb probe create \
-   -g az-fwd-rg \
-   --lb-name FWDILB \
-   --name SSHProbe \
-   --protocol tcp \
-   --port 22
-
-# Create an LB rule to forward SQL packets on 1433 to backend NAT VM on 1433
-az network lb rule create \
-   -g az-fwd-rg \
-   --lb-name FWDILB \
-   --name OnPremSQL \
-   --protocol tcp \
-   --frontend-port 1433 \
-   --backend-port 1433 \
-   --frontend-ip-name FrontEnd \
-   --backend-pool-name bepool \
-   --probe-name SSHProbe
-
-# Get ILB Resource ID
-FWD_ILB=$(az network lb show -g az-fwd-rg -n FWDILB --query frontendIpConfigurations[0].id -o tsv)
-# Create Private Link Service to ILB
-PLS_ID=$(
-   az network private-link-service create \
-      -g az-fwd-rg \
-      -n pls2fwdilb \
-      --vnet-name az-fwd-vnet \
-      --subnet pls-subnet \
-      --lb-frontend-ip-configs ${FWD_ILB} \
-      -l eastus \
-      --query id \
-      -o tsv)
-
-# Create NIC for the VM
-NIC_NAME=fwdvm1nic${RANDOM}
-az network nic create \
-   -g az-fwd-rg \
-   -n ${NIC_NAME} \
-   --vnet-name az-fwd-vnet \
-   --subnet be-subnet
-
-# Create backend forwarding Linux VM
-az vm create \
-   -g az-fwd-rg \
-   --name natvm1 \
-   --image UbuntuLTS \
-   --admin-user azureuser \
-   --generate-ssh-keys \
-   --nics ${NIC_NAME}
 
 # Add NIC to LB
 az network nic ip-config address-pool add \
    --address-pool bepool \
    --ip-config-name ipconfig1 \
    --nic-name ${NIC_NAME} \
-   -g az-fwd-rg \
-   --lb-name FWDILB
+   -g az-adf-fwd-rg \
+   --lb-name ADFFWDILB
 
 # Print PLS ID to use for connection to this PLS
 echo "PLS ID is ${PLS_ID}"
 
 # Print Bastion VM Public IP
-echo "Bastion Public IP is: $(az vm show -d -g az-fwd-rg -n bastionvm --query publicIps -o tsv)"
+echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
 
 4. Creating Forwarding Rule to Endpoint
    * Copy [ip_fwd.sh](ip_fwd.sh) to the Bastion VM and then to each of the  NAT VMs

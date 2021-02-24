@@ -337,6 +337,6 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     3. Select the "Create" option and fill data:
        1. Fill in the appropriate information in the Basics tab
        2. Choose "Configure Git Later" in the Git Configuration tab as shown below:
-          ![Figure 2](images/images/create_adf_git.png)
+          ![Figure 2](images/create_adf_git.png)
        3. Choose "Enable Managed Virtual Network on the default AutoResolveIntengrationRuntime"  in the Networking tab as shown below:
           ![Figure 3](images/create_adf_net.png)

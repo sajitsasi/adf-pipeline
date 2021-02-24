@@ -20,6 +20,13 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      git clone https://github.com/sajitsasi/adf-pipeline.git
      cd adf-pipeline
      ```  
+   * Get the IP and Port of the Destination host to which you want traffic
+     forwarded to.  For example, you have an SQL server installed with 
+     IP 10.100.0.4, then the values would be:
+     ```  
+     DEST_IP="10.100.0.4"
+     DEST_PORT="1433"
+     ```  
 
 ## Implement Forwarding Solution
 1. The following values will be used for this solution:
@@ -257,12 +264,25 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
     ```  
 
-12. Creating Forwarding Rule to Endpoint
-   * Copy [ip_fwd.sh](ip_fwd.sh) to the Bastion VM and then to each of the  NAT VMs
-   * Run the script on each VM with the following options:  
-     ```sudo ./ip_fwd.sh -i eth0 -f 1433 -a <FQDN/IP> -b 1433```  
-     This will forward packets coming in on Ethernet Interface ```eth0``` on port ```1433``` to the ```Destination FQDN or IP of the on-prem SQL Server``` on port ```1433```
+    - Print Bastion VM Public IP (_Optional_)
+    ```  
+    echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
+    ```  
 
+
+12. Creating Forwarding Rule to Endpoint
+    Run command on remote FWD VM to create forwarding rule to destination IP
+    and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
+
+    - Following is a command to forward SQL Ports
+    ```  
+    az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1433 -a 10.100.0.4 -b 1433"
+    ```  
+
+    - Following is a command to forward Windows File Share port
+    ```  
+    az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 445 -a 10.100.0.4 -b 445"
+    ```  
 
 # Connectivity from Managed/Secure VNET to a SQL MI Instance
 

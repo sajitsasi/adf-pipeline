@@ -109,11 +109,16 @@ echo -e "\e[32mCreating Saving iptables rules...\e[0m"
 /sbin/iptables-save > /etc/iptables/rules.v4
 
 #6. Store information
-mkdir -p ${HOME}/.ip_forward
+IP_FWD_DIR="/opt/ip_forward"
+mkdir -p ${IP_FWD_DIR}
 DNAT_DEL_CMD=$(echo ${DNAT_CMD} | sed -e 's/\-A/\-D/g')
 SNAT_DEL_CMD=$(echo ${SNAT_CMD} | sed -e 's/\-A/\-D/g')
 EPOCH=$(date +%s)
-echo ${DNAT_DEL_CMD} > ${HOME}/.ip_forward/".${EPOCH}_${FE_PORT}"
-echo ${SNAT_DEL_CMD} >> ${HOME}/.ip_forward/".${EPOCH}_${FE_PORT}"
-echo "${EPOCH} ${FE_PORT}" >> ${HOME}/.ip_forward/.history
-echo -e "\e[32mDone!\e[0m"
+echo ${DNAT_DEL_CMD} > ${IP_FWD_DIR}/"${EPOCH}_${FE_PORT}"
+echo ${SNAT_DEL_CMD} >> ${IP_FWD_DIR}/"${EPOCH}_${FE_PORT}"
+echo "${EPOCH} ${FE_PORT}" >> ${IP_FWD_DIR}/.history
+echo -e "\e[32m\n\nTo delete the created rule, from az cli run the following:\n\n\e[0m"
+echo -e "\e[33maz vm run-command invoke --command-id RunShellScript -g <resource_group> -n <vm_name> --scripts \"${DNAT_DEL_CMD}\"\e[0m"
+echo -e "\e[33maz vm run-command invoke --command-id RunShellScript -g <resource_group> -n <vm_name> --scripts \"${SNAT_DEL_CMD}\"\e[0m"
+echo -e "\e[32m\n\nSubstitute appropriate values for <resource_group> and <vm_name>\e[0m]"
+echo -e "\e[32mDone\e[0m"

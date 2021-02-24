@@ -12,7 +12,7 @@ The Private Link Service (PLS) as shown in the Provider Network performs [Destin
 If you want to connect from a private/managed subnet to an on-premise server or a server in another VNET as shown in the figure below which shows connectivity from Azure Data Factory (ADF) Managed Virtual Network to an on-premise SQL Server
 ![Figure 1](images/Azure_ADF_FWD.png)
 
-# Implementing the Forwarding Solution:
+# Forwarding Solution:
 
 ## Prerequisites
    * Download code from this repository locally:  
@@ -21,6 +21,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      cd adf-pipeline
      ```  
 
+## Implement Forwarding Solution
 1. The following values will be used for this solution:
    - Resource Group: ```az-adf-fwd-rg```
    - Azure Region: ```East US```

@@ -94,16 +94,26 @@ LOCAL_IP=$(ip addr ls ${ETH_IF} | grep -w inet | awk '{print $2}' | awk -F/ '{pr
 echo -e "\e[32mUsing Local IP ${LOCAL_IP}\e[0m"
 
 #4. Do DNAT
+DNAT_CMD="iptables -t nat -A PREROUTING -p tcp -i ${ETH_IF} --dport ${FE_PORT} -j DNAT --to ${DEST_IP}:${DEST_PORT}"
 echo -e "\e[32mCreating DNAT rule from ${LOCAL_IP}:${FE_PORT} to ${DEST_IP}:${DEST_PORT}...\e[0m"
-iptables -t nat -A PREROUTING -p tcp -i ${ETH_IF} --dport ${FE_PORT} -j DNAT --to ${DEST_IP}:${DEST_PORT}
+${DNAT_CMD}
 
 #4. Do SNAT
+SNAT_CMD="iptables -t nat -A POSTROUTING -p tcp -o ${ETH_IF} --dport ${DEST_PORT} -j SNAT -d ${DEST_IP} --to-source ${LOCAL_IP}:${FE_PORT}"
 echo -e "\e[32mCreating SNAT rule from ${DEST_IP}:${DEST_PORT} to ${LOCAL_IP}:${FE_PORT}...\e[0m"
-iptables -t nat -A POSTROUTING -p tcp -o ${ETH_IF} --dport ${DEST_PORT} -j SNAT -d ${DEST_IP} --to-source ${LOCAL_IP}:${FE_PORT}
+${SNAT_CMD}
 #iptables -t nat -A POSTROUTING -o ${ETH_IF} -j MASQUERADE
 
 #5. Save iptables rules
 echo -e "\e[32mCreating Saving iptables rules...\e[0m"
 /sbin/iptables-save > /etc/iptables/rules.v4
-/bin/systemctl restart netfilter-persistent
+
+#6. Store information
+mkdir -p ${HOME}/.ip_forward
+DNAT_DEL_CMD=$(echo ${DNAT_CMD} | sed -e 's/\-A/\-D/g')
+SNAT_DEL_CMD=$(echo ${SNAT_CMD} | sed -e 's/\-A/\-D/g')
+EPOCH=$(date +%s)
+echo ${DNAT_DEL_CMD} > ${HOME}/.ip_forward/".${EPOCH}_${FE_PORT}"
+echo ${DNAT_DEL_CMD} >> ${HOME}/.ip_forward/".${EPOCH}_${FE_PORT}"
+echo "${EPOCH} ${FE_PORT}" >> ${HOME}/.ip_forward/.history
 echo -e "\e[32mDone!\e[0m"

@@ -47,15 +47,15 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    - Forwarding VM NIC: ```fwdvm[#]nic[RANDOM #]```
    - Backend/Destination server IPs and services:
      The following table shows the configuration that will be passed to the
-     port forwarding VM. The `Frontend Port` references the port on which the
-     port forwarding VM listens while the `Backend Port` references the port
+     port forwarding VM. The `FE Port` references the port on which the
+     port forwarding VM listens while the `BE Port` references the port
      on which the destination server listens.
-     | Server     | Service    | Frontend Port | Backend Port |
-     |            |            | Port          | Port         |
-     |------------|------------|---------------|--------------|
-     | 10.100.3.4 | SQL        |    1433       |   1433       |
-     | 10.100.3.4 | File Share |    445        |   445        |
-     | 10.100.3.5 | SQL        |    1434       |   1433       |
+     Note: Frontend = FE, Backend = BE
+     | Server     | Service    | FE Port | BE Port  |
+     |------------|------------|---------|----------|
+     | 10.100.3.4 | SQL        | 1433    |   1433   |
+     | 10.100.3.4 | File Share | 445     |   445    |
+     | 10.100.3.5 | SQL        | 1434    |   1434   |
 
 2. Connect to your subscription
    - Run the following command  

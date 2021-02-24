@@ -13,6 +13,14 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 ![Figure 1](images/Azure_ADF_FWD.png)
 
 # Implementing the Forwarding Solution:
+
+## Prerequisites
+   * Download code from this repository locally:  
+     ```  
+     git clone https://github.com/sajitsasi/adf-pipeline.git
+     cd adf-pipeline
+     ```  
+
 1. The following values will be used for this solution:
    - Resource Group: ```az-adf-fwd-rg```
    - Azure Region: ```East US```
@@ -245,7 +253,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
     ```  
 
-4. Creating Forwarding Rule to Endpoint
+12. Creating Forwarding Rule to Endpoint
    * Copy [ip_fwd.sh](ip_fwd.sh) to the Bastion VM and then to each of the  NAT VMs
    * Run the script on each VM with the following options:  
      ```sudo ./ip_fwd.sh -i eth0 -f 1433 -a <FQDN/IP> -b 1433```  

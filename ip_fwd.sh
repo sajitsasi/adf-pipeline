@@ -85,7 +85,7 @@ echo "1" > /proc/sys/net/ipv4/ip_forward
 if [[ ${DEST_HOST} =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 	DEST_IP=${DEST_HOST}
 else
-	DEST_IP=$(host ${DEST_HOST} | grep "has address" | awk '{print $NF}')
+	DEST_IP=$(host ${DEST_HOST} | grep -v IPv6 | grep "has address" -m 1 | awk '{print $NF}')
 fi
 echo -e "\e[32mUsing Destination IP ${DEST_IP}\e[0m"
 

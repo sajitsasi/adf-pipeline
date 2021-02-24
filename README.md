@@ -51,6 +51,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      port forwarding VM listens while the `Backend Port` references the port
      on which the destination server listens.
      | Server     | Service    | Frontend Port | Backend Port |
+     |            |            | Port          | Port         |
      |------------|------------|---------------|--------------|
      | 10.100.3.4 | SQL        |    1433       |   1433       |
      | 10.100.3.4 | File Share |    445        |   445        |

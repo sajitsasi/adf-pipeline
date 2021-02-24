@@ -221,7 +221,8 @@ If you want to connect from a private/managed subnet to an on-premise server or 
         --subnet adf-fwd-be-subnet
    ```  
 
-9. Create backend forwarding Linux VM
+9. Create backend forwarding Linux VM  
+   **Note: Make sure you're running this from where the cloud_init.yaml file exists**
    ```  
    az vm create \
      -g az-adf-fwd-rg \
@@ -229,7 +230,8 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --image UbuntuLTS \
      --admin-user azureuser \
      --generate-ssh-keys \
-     --nics ${NIC1_NAME}
+     --nics ${NIC1_NAME} \
+     --custom-data ./cloud_init.yaml
    ```  
 
 

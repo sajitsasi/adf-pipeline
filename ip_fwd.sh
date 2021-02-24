@@ -101,4 +101,9 @@ iptables -t nat -A PREROUTING -p tcp -i ${ETH_IF} --dport ${FE_PORT} -j DNAT --t
 echo -e "\e[32mCreating SNAT rule from ${DEST_IP}:${DEST_PORT} to ${LOCAL_IP}:${FE_PORT}...\e[0m"
 iptables -t nat -A POSTROUTING -p tcp -o ${ETH_IF} --dport ${DEST_PORT} -j SNAT -d ${DEST_IP} --to-source ${LOCAL_IP}:${FE_PORT}
 #iptables -t nat -A POSTROUTING -o ${ETH_IF} -j MASQUERADE
+
+#5. Save iptables rules
+echo -e "\e[32mCreating Saving iptables rules...\e[0m"
+/sbin/iptables-save > /etc/iptables/rules.v4
+/bin/systemctl restart netfilter-persistent
 echo -e "\e[32mDone!\e[0m"

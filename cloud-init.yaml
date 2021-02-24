@@ -1,0 +1,8 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - iptables-persistent
+  - netfilter-persistent
+runcmd:
+  - curl -o /usr/local/bin/ip_fwd.sh https://raw.githubusercontent.com/sajitsasi/adf-pipeline/main/ip_fwd.sh
+  - chmod +x /usr/local/bin/ip_fwd.sh

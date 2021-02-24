@@ -224,19 +224,26 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    ```  
 
 
-# Add NIC to LB
-az network nic ip-config address-pool add \
-   --address-pool bepool \
-   --ip-config-name ipconfig1 \
-   --nic-name ${NIC_NAME} \
-   -g az-adf-fwd-rg \
-   --lb-name ADFFWDILB
+10. Add NIC to LB
+   ```  
+   az network nic ip-config address-pool add \
+     --address-pool bepool \
+     --ip-config-name ipconfig1 \
+     --nic-name ${NIC1_NAME} \
+     -g az-adf-fwd-rg \
+     --lb-name ADFFWDILB
+   ```  
 
-# Print PLS ID to use for connection to this PLS
-echo "PLS ID is ${PLS_ID}"
+11. Print output variables
+    - Print PLS Resource ID to use for connection to this PLS
+    ```  
+    echo "PLS Resource ID is ${PLS_ID}"
+    ```  
 
-# Print Bastion VM Public IP
-echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
+    - Print Bastion VM Public IP (_Optional_)
+    ```  
+    echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
+    ```  
 
 4. Creating Forwarding Rule to Endpoint
    * Copy [ip_fwd.sh](ip_fwd.sh) to the Bastion VM and then to each of the  NAT VMs

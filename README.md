@@ -351,7 +351,7 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
    9. In the search, type "Private" as shown below:  
       ![Figure 8](images/adf_manage_pe_new_pls.png)  
    10. Enter the information as shown in the diagram below.  **When entering the Fully Qualified Domain Names (FQDN), understand that the values need to be entered for ALL services you want ADF to access.**  The FQDN is local to the ADF VNET and doesn't need to match any actual FQDN that you might have assigned to your servers.  The different FQDNs of the multiple servers all translate to a **single** Private Endpoint IP in the local ADF VNET which is connected to the PLS created earlier
-      ![Figure 9](images/adf_new_managed_pd.png)  
+      ![Figure 9](images/adf_new_managed_pe.png)  
       
          
        

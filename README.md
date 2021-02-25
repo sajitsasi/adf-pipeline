@@ -340,7 +340,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
           ![Figure 2](images/create_adf_git.png)  
        3. Choose "Enable Managed Virtual Network on the default AutoResolveIntengrationRuntime"  in the Networking tab as shown below:
           ![Figure 3](images/create_adf_net.png)  
-       4. Click on "Review + Create" and then click on "Create" when done  
+       4. Click on "Review + Create" and then click on "Create" when done
     4. Now go to [Azure ADF](https://adf.azure.com)  
             
     5. Choose your AAD, Subscription, and enter your Data Factory Name that you just created and click on Continue
@@ -358,6 +358,5 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     9. In the search, type "Private" as shown below:  
        ![Figure 8](images/adf_manage_pe_new_pls.png)  
          
-    10.
        
        

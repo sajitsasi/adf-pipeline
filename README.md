@@ -321,17 +321,17 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
    ### 3. Select the "Create" option and fill data:  
 
    * Fill in the appropriate information in the Basics tab
-   ============================================================================
+
+
    * Choose "Configure Git Later" in the Git Configuration tab as shown below:
      ![Figure 2](images/create_adf_git.png)  
-   ============================================================================
+
 
    * Choose "Enable Managed Virtual Network on the default AutoResolveIntengrationRuntime"  in the Networking tab as shown below:
      ![Figure 3](images/create_adf_net.png)  
-   ============================================================================
+
 
    * Click on "Review + Create" and then click on "Create" when done  
-   ============================================================================
 
 
    ### 4. Now go to [Azure ADF](https://adf.azure.com)  

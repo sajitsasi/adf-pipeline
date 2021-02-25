@@ -174,7 +174,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 
 
 ### 6. Standard Internal Load Balancer
-   * Create Load Balancer
+   #### Create Load Balancer
    ```  
    az network lb create \
      -g az-adf-fwd-rg \
@@ -186,7 +186,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --backend-pool-name bepool
    ```  
 
-   * Create a health probe to monitor the health of VMs using port 22  
+   #### Create a health probe to monitor the health of VMs using port 22  
    ```  
    az network lb probe create \
      -g az-adf-fwd-rg \
@@ -196,7 +196,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --port 22
    ```
 
-   * Create an LB rule to forward SQL packets on 1433 to forwarding VM on 1433
+   #### Create an LB rule to forward SQL packets on 1433 to forwarding VM on 1433
    ```  
    az network lb rule create \
      -g az-adf-fwd-rg \
@@ -210,7 +210,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --probe-name SSHProbe
    ```  
 
-   * Create an LB rule to forward (SQL) packets on 1434 to forwarding VM on 1434
+   #### Create an LB rule to forward (SQL) packets on 1434 to forwarding VM on 1434
    ```  
    az network lb rule create \
      -g az-adf-fwd-rg \
@@ -224,7 +224,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --probe-name SSHProbe
    ```  
 
-   * Create an LB rule to forward File Share packets on 445 to forwarding VM on 445
+   #### Create an LB rule to forward File Share packets on 445 to forwarding VM on 445
    ```  
    az network lb rule create \
      -g az-adf-fwd-rg \
@@ -238,7 +238,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --probe-name SSHProbe
    ```  
 
-   * Get ILB Resource ID
+   #### Get ILB Resource ID
    ```  
    FWD_ILB=$(az network lb show -g az-adf-fwd-rg -n ADFFWDILB --query frontendIpConfigurations[0].id -o tsv)
    ```  
@@ -267,7 +267,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    ```  
 
 ### 9. Create backend forwarding Linux VM  
-   **Note: Make sure you're running this from where the cloud_init.yaml file exists**
+**Note: Make sure you're running this from where the cloud_init.yaml file exists**
    ```  
    az vm create \
      -g az-adf-fwd-rg \
@@ -292,21 +292,16 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    ```  
 
 ### 11. Print output variables
-    * Print PLS Resource ID to use for connection to this PLS
-    ```  
+These are variables to use when wanting to connect to the PLS, or the Bastion VM
+  #### Print PLS Resource ID to use for connection to this PLS
+  ```  
     echo "PLS Resource ID is ${PLS_ID}"
-    ```  
+  ```  
 
-    * Print Bastion VM Public IP (_Optional_)
-    ```  
+  #### Print Bastion VM Public IP (_Optional_)
+  ```  
     echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
-    ```  
-
-    * Print Bastion VM Public IP (_Optional_)
-    ```  
-    echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
-    ```  
-
+  ```  
 
 ### 12. Creating Forwarding Rule to Endpoint
 Run command on remote FWD VM to create forwarding rule to destination IP
@@ -350,7 +345,7 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
       ![Figure 7](images/adf_manage_pe_new.png)  
    9. In the search, type "Private" as shown below:  
       ![Figure 8](images/adf_manage_pe_new_pls.png)  
-   10. Enter the information as shown in the diagram below.  **When entering the Fully Qualified Domain Names (FQDN), understand that the values need to be entered for ALL services you want ADF to access.**  The FQDN is local to the ADF VNET and doesn't need to match any actual FQDN that you might have assigned to your servers.  The different FQDNs of the multiple servers all translate to a **single** Private Endpoint IP in the local ADF VNET which is connected to the PLS created earlier
+   10. Enter the information as shown in the diagram below.  **When entering the Fully Qualified Domain Names (FQDN), understand that the values need to be entered for ALL services you want ADF to access.**  The FQDN is local to the ADF VNET and doesn't need to match any actual FQDN that you might have assigned to your servers.  The different FQDNs of the multiple servers all translate to a **single** Private Endpoint IP in the local ADF VNET which is connected to the PLS created earlier. Click on "Create" once everything is entered.
       ![Figure 9](images/adf_new_managed_pe.png)  
       
          

@@ -343,7 +343,6 @@ If you want to connect from a private/managed subnet to an on-premise server or 
           ![Figure 3](images/create_adf_net.png)  
             
        4. Click on "Review + Create" and then click on "Create" when done  
-            
     4. Now go to [Azure ADF](https://adf.azure.com)  
             
     5. Choose your AAD, Subscription, and enter your Data Factory Name that you just created and click on Continue

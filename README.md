@@ -350,7 +350,7 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
    11. Click on "Linked Services" under Connections and from the Linked Services page, select "New" as shown below:
       ![Figure 10](images/adf_linked_service_new.png)
    12. From the New Linked Service page, search for "sql" and select the "SQL Server" as shown below:
-      ![Figure 11](images/adf_linked_service_new.png)
+      ![Figure 11]images/adf_linked_service_sql_server.png)
 
       
          

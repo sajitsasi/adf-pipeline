@@ -312,17 +312,17 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 Run command on remote FWD VM to create forwarding rule to destination IP
 and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
 
-  * Following is a command to forward SQL Ports
+  #### Following is a command to forward SQL Ports
   ```  
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1433 -a 10.100.3.4 -b 1433"
   ```  
 
-  * Following is a command to forward Windows File Share port
+  #### Following is a command to forward Windows File Share port
   ```  
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 445 -a 10.100.3.4 -b 445"
   ```  
 
-  * When you have multiple SQL servers, you want to use a different frontend
+  #### When you have multiple SQL servers, you want to use a different frontend
     port to forward to the new server.  Here's an example of another SQL 
     server with ```DEST_IP=10.100.3.5``` but listening on 1433. This example 
     uses a frontend port of 1434:
@@ -331,27 +331,28 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
   ```  
 
  ### 13. Setup connectivity in ADF
-     * Go to the [Azure Portal](https://portal.azure.com)  
-     * From the center search, search for "Data Factories" and click on the 
-       "Data Factories" option  
-     * Select the "Create" option and fill data:  
-       - Fill in the appropriate information in the Basics tab
-       - Choose "Configure Git Later" in the Git Configuration tab as shown below:
-          ![Figure 2](images/create_adf_git.png)  
-       - Choose "Enable Managed Virtual Network on the default AutoResolveIntengrationRuntime"  in the Networking tab as shown below:
-          ![Figure 3](images/create_adf_net.png)  
-       - Click on "Review + Create" and then click on "Create" when done  
-     * Now go to [Azure ADF](https://adf.azure.com)  
-     * Choose your AAD, Subscription, and enter your Data Factory Name that you just created and click on Continue
-       ![Figure 4](images/adf_select.png)  
-     * On the Data Factory screen, click on the "Manage" icon as shown in the figure below:
-       ![Figure 5](images/adf_manage.png)    
-     * From the Manage page, select the "Managed Private Endpoints" as shown in the figure below:
-       ![Figure 6](images/adf_manage_pe.png)  
-     * Click on "New" from the "Managed Private Endpoints" page as shown below:
-       ![Figure 7](images/adf_manage_pe_new.png)  
-     * In the search, type "Private" as shown below:  
-       ![Figure 8](images/adf_manage_pe_new_pls.png)  
+ This will setup connectivity from ADF to the Private Link Service created in the Azure subscription
+   1. Go to the [Azure Portal](https://portal.azure.com)  
+   2. From the center search, search for "Data Factories" and click on the 
+     "Data Factories" option  
+   3. Select the "Create" option and fill data:  
+     * Fill in the appropriate information in the Basics tab
+     * Choose "Configure Git Later" in the Git Configuration tab as shown below:
+       ![Figure 2](images/create_adf_git.png)  
+     * Choose "Enable Managed Virtual Network on the default AutoResolveIntengrationRuntime"  in the Networking tab as shown below:
+        ![Figure 3](images/create_adf_net.png)  
+     * Click on "Review + Create" and then click on "Create" when done  
+   4. Now go to [Azure ADF](https://adf.azure.com)  
+   5. Choose your AAD, Subscription, and enter your Data Factory Name that you just created and click on Continue
+      ![Figure 4](images/adf_select.png)  
+   6. On the Data Factory screen, click on the "Manage" icon as shown in the figure below:
+      ![Figure 5](images/adf_manage.png)    
+   7. From the Manage page, select the "Managed Private Endpoints" as shown in the figure below:
+      ![Figure 6](images/adf_manage_pe.png)  
+   8. Click on "New" from the "Managed Private Endpoints" page as shown below:
+      ![Figure 7](images/adf_manage_pe_new.png)  
+   9. In the search, type "Private" as shown below:  
+      ![Figure 8](images/adf_manage_pe_new_pls.png)  
          
        
        

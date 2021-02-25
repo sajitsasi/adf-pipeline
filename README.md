@@ -321,74 +321,88 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
    ### 3. Select the "Create" option and fill data:  
 
    * Fill in the appropriate information in the Basics tab
-
+   ============================================================================
    * Choose "Configure Git Later" in the Git Configuration tab as shown below:
      ![Figure 2](images/create_adf_git.png)  
+   ============================================================================
 
    * Choose "Enable Managed Virtual Network on the default AutoResolveIntengrationRuntime"  in the Networking tab as shown below:
      ![Figure 3](images/create_adf_net.png)  
+   ============================================================================
 
    * Click on "Review + Create" and then click on "Create" when done  
-
+   ============================================================================
 
 
    ### 4. Now go to [Azure ADF](https://adf.azure.com)  
+   ============================================================================
    
 
 
    ### 5. Choose your AAD, Subscription, and enter your Data Factory Name that you just created and click on Continue
    ![Figure 4](images/adf_select.png)  
+   ============================================================================
 
 
 
    ### 6. On the Data Factory screen, click on the "Manage" icon as shown in the figure below:
    ![Figure 5](images/adf_manage.png)    
+   ============================================================================
 
 
 
    ### 7. From the Manage page, select the "Managed Private Endpoints" as shown in the figure below:
    ![Figure 6](images/adf_manage_pe.png)  
+   ============================================================================
 
 
 
    ### 8. Click on "New" from the "Managed Private Endpoints" page as shown below:
    ![Figure 7](images/adf_manage_pe_new.png)  
+   ============================================================================
 
 
 
    ### 9. In the search, type "Private" as shown below:  
    ![Figure 8](images/adf_manage_pe_new_pls.png)  
+   ============================================================================
 
 
 
    ### 10. Enter the information as shown in the diagram below.  
    **When entering the Fully Qualified Domain Names (FQDN), understand that the values need to be entered for ALL services you want ADF to access.**  The FQDN is local to the ADF VNET and doesn't need to match any actual FQDN that you might have assigned to your servers.  The different FQDNs of the multiple servers all translate to a **single** Private Endpoint IP in the local ADF VNET which is connected to the PLS created earlier. Click on "Create" once everything is entered.
    ![Figure 9](images/adf_new_managed_pe.png)  
+   ============================================================================
    
 
    ### 11. Click on "Linked Services" under Connections and from the Linked Services page, select "New" as shown below:
    ![Figure 10](images/adf_linked_service_new.png)
+   ============================================================================
 
 
    ### 12. From the New Linked Service page, search for "sql" and select the "SQL Server" as shown below:
    ![Figure 11](images/adf_linked_service_sql_server.png)
+   ============================================================================
 
 
 
    ### 13. Click on the highlighted item as shown below to change integration runtime settings:
    ![Figure 12](images/adf_linked_service_new_sql_server.png)
+   ============================================================================
 
 
 
    ### 14. Click on the highlighted item as shown below to enable Interactive Authoring:
    ![Figure 13](images/adf_integration_runtime_interactive_authoring.png)
+   ============================================================================
 
 
 
    ### 15. Enter the information that matches your SQL Server and click on "Test Connection" to verify connectivity is working as shown below:
    ![Figure 14](images/adf_new_linked_service_sql_server.png) 
+   ============================================================================
 
 
 
    ### 16. Follow the same steps to create a Linked Service to a File Share as shown below: 
-   ![Figure 14](images/adf_new_linked_service_file_share.png)
+   ![Figure 15](images/adf_new_linked_service_file_share.png)

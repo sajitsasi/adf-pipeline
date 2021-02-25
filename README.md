@@ -54,7 +54,6 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      |------------|------------|---------|----------|
      | 10.100.3.4 | SQL        | 1433    |   1433   |
      | 10.100.3.4 | File Share | 445     |   445    |
-     | 10.100.3.5 | SQL        | 1434    |   1433   |
 
 ### 2. Connect to your subscription
    #### Run the following command  
@@ -205,20 +204,6 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --protocol tcp \
      --frontend-port 1433 \
      --backend-port 1433 \
-     --frontend-ip-name FrontEnd \
-     --backend-pool-name bepool \
-     --probe-name SSHProbe
-   ```  
-
-   #### Create an LB rule to forward (SQL) packets on 1434 to forwarding VM on 1434
-   ```  
-   az network lb rule create \
-     -g az-adf-fwd-rg \
-     --lb-name ADFFWDILB \
-     --name OnPremSQL \
-     --protocol tcp \
-     --frontend-port 1434 \
-     --backend-port 1434 \
      --frontend-ip-name FrontEnd \
      --backend-pool-name bepool \
      --probe-name SSHProbe

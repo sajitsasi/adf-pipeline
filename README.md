@@ -288,7 +288,14 @@ These are variables to use when wanting to connect to the PLS, or the Bastion VM
     echo "Bastion Public IP is: $(az vm show -d -g az-adf-fwd-rg -n bastionvm --query publicIps -o tsv)"
   ```  
 
-### 12. Creating Forwarding Rule to Endpoint
+### 12. Create a SQL Server VM
+Follow instructions in this [link](https://docs.microsoft.com/en-us/azure/azure-sql/virtual-machines/windows/sql-vm-create-portal-quickstart) to install a SQL Server VM.
+Note:
+   * Get the Private IP address of the VM 
+   * Verify that it is accessible from the Forwarding VM created above
+   * In our example, the SQL Server has Private IP `10.100.3.4`
+
+### 13. Creating Forwarding Rule to Endpoint
 Run command on remote FWD VM to create forwarding rule to destination IP
 and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
 
@@ -307,7 +314,7 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1434 -a 10.100.3.5 -b 1433"
   ```  
 
- ### 13. Setup connectivity in ADF
+ ### 14. Setup connectivity in ADF
  This will setup connectivity from ADF to the Private Link Service created in the Azure subscription
 
    ### 1. Go to the [Azure Portal](https://portal.azure.com)  

@@ -335,12 +335,12 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     2. From the center search, search for "Data Factories" and click on the 
        "Data Factories" option  
     3. Select the "Create" option and fill data:  
-       1. Fill in the appropriate information in the Basics tab
-       2. Choose "Configure Git Later" in the Git Configuration tab as shown below:
+       - Fill in the appropriate information in the Basics tab
+       - Choose "Configure Git Later" in the Git Configuration tab as shown below:
           ![Figure 2](images/create_adf_git.png)  
-       3. Choose "Enable Managed Virtual Network on the default AutoResolveIntengrationRuntime"  in the Networking tab as shown below:
+       - Choose "Enable Managed Virtual Network on the default AutoResolveIntengrationRuntime"  in the Networking tab as shown below:
           ![Figure 3](images/create_adf_net.png)  
-       4. Click on "Review + Create" and then click on "Create" when done
+       - Click on "Review + Create" and then click on "Create" when done
     4. Now go to [Azure ADF](https://adf.azure.com)  
             
     5. Choose your AAD, Subscription, and enter your Data Factory Name that you just created and click on Continue

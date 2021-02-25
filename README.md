@@ -57,15 +57,15 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      | 10.100.3.5 | SQL        | 1434    |   1433   |
 
 ### 2. Connect to your subscription
-   * Run the following command  
+   #### Run the following command  
      ```
      az login
      ```  
-   * List subscriptions available if you have more than one Azure subscription:  
+   #### List subscriptions available if you have more than one Azure subscription:  
      ```
      az account list --all
      ```
-   * Specify the subscription you want to use:  
+   #### Specify the subscription you want to use:  
      ```
      az account set --subscription <subscription_id>
      ```  
@@ -77,7 +77,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 
 ### 4. Create a VNET and subnets  
 
-   * Create VNET and Frontend subnet
+   #### Create VNET and Frontend subnet
    ```
    az network vnet create \
      -g az-adf-fwd-rg \
@@ -88,7 +88,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --location eastus
    ```  
 
-   * Create Backend subnet
+   #### Create Backend subnet
    ``` 
    az network vnet subnet create \
      -g az-adf-fwd-rg \
@@ -96,7 +96,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      -n adf-fwd-be-subnet \
      --address-prefix 10.100.1.0/24 
    ```  
-   * Create PLS subnet
+   #### Create PLS subnet
    ``` 
    az network vnet subnet create \
      -g az-adf-fwd-rg \
@@ -105,7 +105,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --address-prefix 10.100.2.0/24 
    ```  
      
-   * Disable PLS Network Policies
+   #### Disable PLS Network Policies
    ```  
    az network vnet subnet update \
      -g az-adf-fwd-rg \
@@ -114,7 +114,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --disable-private-link-service-network-policies true
    ```  
 
-   * Create VM subnet
+   #### Create VM subnet
    ``` 
    az network vnet subnet create \
      -g az-adf-fwd-rg \
@@ -123,7 +123,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --address-prefix 10.100.3.0/24 
    ```  
    
-   * Create Bastion subnet (_Optional * use if you only want to externally connect_)
+   #### Create Bastion subnet (_Optional * use if you only want to externally connect_)
    ``` 
    az network vnet subnet create \
      -g az-adf-fwd-rg \

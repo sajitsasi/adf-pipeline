@@ -58,17 +58,17 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 
 ### 2. Connect to your subscription
    #### Run the following command  
-     ```
+   ```
      az login
-     ```  
+   ```  
    #### List subscriptions available if you have more than one Azure subscription:  
-     ```
+   ```
      az account list --all
-     ```
+   ```
    #### Specify the subscription you want to use:  
-     ```
+   ```
      az account set --subscription <subscription_id>
-     ```  
+   ```  
 
 ### 3. Create a Resource Group  
    ```

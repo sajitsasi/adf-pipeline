@@ -341,8 +341,7 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
    14. Click on the highlighted item as shown below to enable Interactive Authoring:
       ![Figure 13](images/adf_integration_runtime_interactive_authoring.png)
    15. Enter the information that matches your SQL Server and click on "Test Connection" to verify connectivity is working as shown below:
-      ![Figure 14](images/adf_new_linked_service_sql_server.png)
-  <br>
+      ![Figure 14](images/adf_new_linked_service_sql_server.png) <br>
    **16. Follow the same steps to create a Linked Service to a File Share as shown below:**
       ![Figure 14](images/adf_new_linked_service_file_share.png)
 

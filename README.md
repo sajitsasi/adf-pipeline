@@ -330,11 +330,11 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1434 -a 10.100.3.5 -b 1433"
     ```  
 
- 13. Setup connectivity in ADF
-    1. Go to the [Azure Portal](https://portal.azure.com)
+ 13. Setup connectivity in ADF  
+    1. Go to the [Azure Portal](https://portal.azure.com)  
     2. From the center search, search for "Data Factories" and click on the 
-       "Data Factories" option
-    3. Select the "Create" option and fill data:
+       "Data Factories" option  
+    3. Select the "Create" option and fill data:  
        1. Fill in the appropriate information in the Basics tab
        2. Choose "Configure Git Later" in the Git Configuration tab as shown below:
           ![Figure 2](images/create_adf_git.png)  

@@ -345,7 +345,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     5. Choose your AAD, Subscription, and enter your Data Factory Name that you just created and click on Continue
        ![Figure 4](images/adf_select.png)
     6. On the Data Factory screen, click on the "Manage" icon as shown in the figure below:
-       ![Figure 5](images/adf_manage.png)
+       ![Figure 5](images/adf_manage.png)  
     7. From the Manage page, select the "Managed Private Endpoints" as shown in the figure below:
        ![Figure 6](images/adf_manage_pe.png)
     8. Click on "New" from the "Managed Private Endpoints" page as shown below:

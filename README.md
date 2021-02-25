@@ -29,7 +29,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      ```  
 
 ## Implement Forwarding Solution
-1. The following values will be used for this solution:
+### 1. The following values will be used for this solution:
    * Resource Group: ```az-adf-fwd-rg```
    * Azure Region: ```East US```
    * Forwarding VNET Name: ```az-adf-fwd-vnet```
@@ -56,7 +56,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      | 10.100.3.4 | File Share | 445     |   445    |
      | 10.100.3.5 | SQL        | 1434    |   1433   |
 
-2. Connect to your subscription
+### 2. Connect to your subscription
    * Run the following command  
      ```
      az login
@@ -70,12 +70,12 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      az account set --subscription <subscription_id>
      ```  
 
-3. Create a Resource Group  
+### 3. Create a Resource Group  
    ```
    az group create --name az-adf-fwd-rg --location eastus
    ```  
 
-4. Create a VNET and subnets  
+### 4. Create a VNET and subnets  
 
    * Create VNET and Frontend subnet
    ```
@@ -132,7 +132,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --address-prefix 10.100.4.0/24 
    ```  
 
-5. Create an NSG (_Optional * use if you only want to externally connect_)  
+### 5. Create an NSG (_Optional use if you only want to externally connect_)  
    * Create NSG
    ```
    az network nsg create -g az--adf-fwd-rg --name adf-fwd-vm-nsg
@@ -173,7 +173,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    ```  
 
 
-6. Standard Internal Load Balancer
+### 6. Standard Internal Load Balancer
    * Create Load Balancer
    ```  
    az network lb create \
@@ -242,7 +242,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    ```  
    FWD_ILB=$(az network lb show -g az-adf-fwd-rg -n ADFFWDILB --query frontendIpConfigurations[0].id -o tsv)
    ```  
-7. Create Private Link Service to ILB
+### 7. Create Private Link Service to ILB
    ```  
    PLS_ID=$(
       az network private-link-service create \
@@ -256,7 +256,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
         -o tsv)
    ```  
 
-8. Create NICs for VMs
+### 8. Create NICs for VMs
    ```  
    NIC1_NAME=fwdvm1nic${RANDOM}
       az network nic create \
@@ -266,7 +266,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
         --subnet adf-fwd-be-subnet
    ```  
 
-9. Create backend forwarding Linux VM  
+### 9. Create backend forwarding Linux VM  
    **Note: Make sure you're running this from where the cloud_init.yaml file exists**
    ```  
    az vm create \
@@ -281,7 +281,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    ```  
 
 
-10. Add NIC to LB
+### 10. Add NIC to LB
    ```  
    az network nic ip-config address-pool add \
      --address-pool bepool \
@@ -291,7 +291,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --lb-name ADFFWDILB
    ```  
 
-11. Print output variables
+### 11. Print output variables
     * Print PLS Resource ID to use for connection to this PLS
     ```  
     echo "PLS Resource ID is ${PLS_ID}"
@@ -308,7 +308,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     ```  
 
 
-12. Creating Forwarding Rule to Endpoint
+### 12. Creating Forwarding Rule to Endpoint
     Run command on remote FWD VM to create forwarding rule to destination IP
     and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
 
@@ -330,7 +330,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1434 -a 10.100.3.5 -b 1433"
     ```  
 
- 13. Setup connectivity in ADF  
+ ### 13. Setup connectivity in ADF  
     1. Go to the [Azure Portal](https://portal.azure.com)  
     2. From the center search, search for "Data Factories" and click on the 
        "Data Factories" option  

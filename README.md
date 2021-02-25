@@ -309,26 +309,26 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 
 
 ### 12. Creating Forwarding Rule to Endpoint
-    Run command on remote FWD VM to create forwarding rule to destination IP
-    and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
+Run command on remote FWD VM to create forwarding rule to destination IP
+and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
 
-    * Following is a command to forward SQL Ports
-    ```  
+  * Following is a command to forward SQL Ports
+  ```  
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1433 -a 10.100.3.4 -b 1433"
-    ```  
+  ```  
 
-    * Following is a command to forward Windows File Share port
-    ```  
+  * Following is a command to forward Windows File Share port
+  ```  
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 445 -a 10.100.3.4 -b 445"
-    ```  
+  ```  
 
-    * When you have multiple SQL servers, you want to use a different frontend
-      port to forward to the new server.  Here's an example of another SQL 
-      server with ```DEST_IP=10.100.3.5``` but listening on 1433. This example 
-      uses a frontend port of 1434:
-    ```  
+  * When you have multiple SQL servers, you want to use a different frontend
+    port to forward to the new server.  Here's an example of another SQL 
+    server with ```DEST_IP=10.100.3.5``` but listening on 1433. This example 
+    uses a frontend port of 1434:
+  ```  
     az vm run-command invoke --command-id RunShellScript -g az-adf-fwd-rg -n fwdvm1 --scripts "/usr/local/bin/ip_fwd.sh -i eth0 -f 1434 -a 10.100.3.5 -b 1433"
-    ```  
+  ```  
 
  ### 13. Setup connectivity in ADF
      * Go to the [Azure Portal](https://portal.azure.com)  

@@ -133,11 +133,11 @@ If you want to connect from a private/managed subnet to an on-premise server or 
    ```  
 
 ### 5. Create an NSG (_Optional use if you only want to externally connect_)  
-   * Create NSG
+   #### Create NSG
    ```
    az network nsg create -g az--adf-fwd-rg --name adf-fwd-vm-nsg
    ```
-   * Create NSG Rule for SSH Access
+   #### Create NSG Rule for SSH Access
    ```  
    ALLOWED_IP_ADDRESS="$(curl ifconfig.me)/32"
    az network nsg rule create \
@@ -152,7 +152,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --protocol Tcp
    ```  
 
-   * Assign NSG to Bastion subnet
+   #### Assign NSG to Bastion subnet
    ```  
    az network vnet subnet update \
      -g az-adf-fwd-rg \
@@ -161,7 +161,7 @@ If you want to connect from a private/managed subnet to an on-premise server or 
      --network-security-group adf-fwd-vm-nsg
    ```  
 
-   * Create Bastion VM
+   #### Create Bastion VM
    ```  
    az vm create \
      -g az-adf-fwd-rg \

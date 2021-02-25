@@ -317,15 +317,15 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
  ### 14. Setup connectivity in ADF
  This will setup connectivity from ADF to the Private Link Service created in the Azure subscription
 
-   ### 1. Go to the [Azure Portal](https://portal.azure.com)  
+   #### 1. Go to the [Azure Portal](https://portal.azure.com)  
 
 
 
-   ### 2. From the center search, search for "Data Factories" and click on the "Data Factories" option  
+   #### 2. From the center search, search for "Data Factories" and click on the "Data Factories" option  
 
 
 
-   ### 3. Select the "Create" option and fill data:  
+   #### 3. Select the "Create" option and fill data:  
 
    * Fill in the appropriate information in the Basics tab
 
@@ -341,41 +341,41 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
    * Click on "Review + Create" and then click on "Create" when done  
 
 
-   ### 4. Now go to [Azure ADF](https://adf.azure.com)  
+   #### 4. Now go to [Azure ADF](https://adf.azure.com)  
 
 
 
-   ### 5. Choose your AAD, Subscription, and enter your Data Factory Name that you just created and click on Continue
+   #### 5. Choose your AAD, Subscription, and enter your Data Factory Name that you just created and click on Continue
    ![Figure 4](images/adf_select.png)  
    ============================================================================
 
 
 
-   ### 6. On the Data Factory screen, click on the "Manage" icon as shown in the figure below:
+   #### 6. On the Data Factory screen, click on the "Manage" icon as shown in the figure below:
    ![Figure 5](images/adf_manage.png)    
    ============================================================================
 
 
 
-   ### 7. From the Manage page, select the "Managed Private Endpoints" as shown in the figure below:
+   #### 7. From the Manage page, select the "Managed Private Endpoints" as shown in the figure below:
    ![Figure 6](images/adf_manage_pe.png)  
    ============================================================================
 
 
 
-   ### 8. Click on "New" from the "Managed Private Endpoints" page as shown below:
+   #### 8. Click on "New" from the "Managed Private Endpoints" page as shown below:
    ![Figure 7](images/adf_manage_pe_new.png)  
    ============================================================================
 
 
 
-   ### 9. In the search, type "Private" as shown below:  
+   #### 9. In the search, type "Private" as shown below:  
    ![Figure 8](images/adf_manage_pe_new_pls.png)  
    ============================================================================
 
 
 
-   ### 10. Enter the information as shown in the diagram below.  
+   #### 10. Enter the information as shown in the diagram below.  
    **When entering the Fully Qualified Domain Names (FQDN), understand that the values need to be entered for ALL services you want ADF to access.**  The FQDN is local to the ADF VNET and doesn't need to match any actual FQDN that you might have assigned to your servers.  The different FQDNs of the multiple servers all translate to a **single** Private Endpoint IP in the local ADF VNET which is connected to the PLS created earlier. Click on "Create" once everything is entered.
    ![Figure 9](images/adf_new_managed_pe.png)  
    ============================================================================

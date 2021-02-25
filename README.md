@@ -13,6 +13,8 @@ If you want to connect from a private/managed subnet to an on-premise server or 
 ![Figure 1](images/Azure_ADF_FWD.png)
 
 # Forwarding Solution:
+This highlighted elements in the diagram below will be implemented in the Forwarding Solution
+![Figure 17](images/Azure_ADF_SQL.png)
 
 ## Prerequisites
    * Download code from this repository locally:  

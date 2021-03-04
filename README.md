@@ -409,5 +409,5 @@ and port (```$DEST_IP``` and ```$DEST_PORT``` from Prerequisites).
 
 
 
-   #### 16. Follow the same steps to create a Linked Service to a File Share as shown below: 
+   #### 16. Follow the same steps to create a Linked Service to a file Share as shown below: 
    ![Figure 15](images/adf_new_linked_service_file_share.png)
